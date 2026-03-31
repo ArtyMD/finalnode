@@ -1,5 +1,7 @@
 import { HeartbeatTimer } from "@/components/HeartbeatTimer";
 import { Vault } from "@/components/Vault";
+import { UserProfileMenu } from "@/components/UserProfileMenu";
+import { BeneficiaryManager } from "@/components/BeneficiaryManager";
 
 export default function Dashboard() {
     return (
@@ -17,11 +19,8 @@ export default function Dashboard() {
                         <span className="text-xl font-medium tracking-wide text-white">FinalNode</span>
                     </div>
                     <div className="flex items-center space-x-6">
-                        <span className="hidden sm:inline text-sm font-medium text-zinc-500">Beneficiary: <span className="text-zinc-300 pl-1">Sarah Jensen</span></span>
-                        <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 overflow-hidden">
-                            {/* Profile placeholder */}
-                            <div className="w-full h-full bg-gradient-to-br from-zinc-700 to-zinc-900" />
-                        </div>
+                        <BeneficiaryManager />
+                        <UserProfileMenu />
                     </div>
                 </header>
 

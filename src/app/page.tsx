@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
 import {
   ShieldAlert,
   LockKeyhole,
@@ -95,6 +97,15 @@ const TRUST = [
 ];
 
 export default function LandingPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) setIsLoggedIn(true);
+    });
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-[#060B14] text-white overflow-hidden font-sans">
       {/* ── Background Effects ── */}
@@ -125,24 +136,29 @@ export default function LandingPage() {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <Link
-            href="/how-it-works"
-            className="hidden sm:block text-sm text-zinc-400 hover:text-white transition-colors duration-200 px-4 py-2"
-          >
-            How it works
-          </Link>
-          <Link
-            href="/login"
-            className="text-sm px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-200 hover:text-white transition-all duration-200"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-sm px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-indigo-600/25"
-          >
-            Get Started
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/dashboard"
+              className="text-sm px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-indigo-600/25"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-200 hover:text-white transition-all duration-200"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/login"
+                className="text-sm px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-indigo-600/25"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -175,7 +191,7 @@ export default function LandingPage() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 hero-fade-in-delay-3">
           <Link
-            href="/dashboard"
+            href={isLoggedIn ? "/dashboard" : "/login"}
             id="cta-enter-vault"
             className="group inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-semibold text-lg transition-all duration-300 shadow-[0_0_60px_-10px_rgba(99,102,241,0.6)] hover:shadow-[0_0_80px_-5px_rgba(99,102,241,0.7)] hover:-translate-y-0.5"
           >
@@ -383,11 +399,11 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href={isLoggedIn ? "/dashboard" : "/login"}
               id="cta-bottom-enter-vault"
               className="group inline-flex items-center justify-center gap-2 px-10 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-semibold text-lg transition-all duration-300 shadow-[0_0_80px_-10px_rgba(99,102,241,0.7)] hover:shadow-[0_0_100px_-5px_rgba(99,102,241,0.8)] hover:-translate-y-1"
             >
-              Create Free Vault
+              {isLoggedIn ? "Enter Vault" : "Create Free Vault"}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
             </Link>
             <Link
@@ -418,9 +434,15 @@ export default function LandingPage() {
             <Link href="/how-it-works" className="hover:text-zinc-400 transition-colors">
               How it works
             </Link>
-            <Link href="/login" className="hover:text-zinc-400 transition-colors">
-              Sign in
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="hover:text-zinc-400 transition-colors">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/login" className="hover:text-zinc-400 transition-colors">
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       </footer>
